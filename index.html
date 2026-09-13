@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0F1419;
+    --panel: #161B22;
+    --line: #2A313C;
+    --text: #E6E8EB;
+    --text-dim: #8B949E;
+    --amber: #E8A33D;
+    --teal: #4FA8A0;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; font-weight:600; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--amber); color:#0F1419; }
+
+  .wrap{ max-width:980px; margin:0 auto; padding:0 32px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,20,25,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:18px; }
+  .brand span{ color:var(--amber); }
+  .nav-links{ display:flex; gap:28px; font-size:14px; color:var(--text-dim); }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-resume{
+    border:1px solid var(--line); padding:7px 14px; border-radius:4px;
+    font-size:13px; color:var(--text); font-family:'IBM Plex Mono', monospace;
+  }
+  .nav-resume:hover{ border-color:var(--amber); color:var(--amber); }
+
+  /* HERO */
+  .hero{ padding:88px 0 72px; display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:center; }
+  .kicker{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--teal); margin-bottom:18px; }
+  .hero h1{ font-size:44px; line-height:1.15; letter-spacing:-0.01em; }
+  .hero p.lead{ margin-top:20px; color:var(--text-dim); font-size:16px; max-width:46ch; }
+  .hero-cta{ margin-top:32px; display:flex; gap:14px; }
+  .btn{
+    padding:11px 20px; border-radius:4px; font-size:14px; font-weight:500;
+    display:inline-block;
+  }
+  .btn-primary{ background:var(--amber); color:#14100a; }
+  .btn-primary:hover{ background:#f0b055; }
+  .btn-ghost{ border:1px solid var(--line); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--text-dim); }
+
+  /* pipeline diagram */
+  .pipeline{ position:relative; height:280px; }
+  .pipeline svg{ width:100%; height:100%; }
+  .node-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; fill:var(--text-dim); }
+  .node-box{ fill:var(--panel); stroke:var(--line); stroke-width:1; }
+  .flow-line{ stroke:var(--line); stroke-width:1.5; fill:none; }
+  .dot{ fill:var(--amber); }
+
+  section{ padding:64px 0; border-top:1px solid var(--line); }
+  .section-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:36px; }
+  .section-head h2{ font-size:24px; }
+  .section-head .num{ font-family:'IBM Plex Mono', monospace; color:var(--text-dim); font-size:14px; }
+
+  /* ABOUT */
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+  .about-text p{ color:var(--text-dim); margin-bottom:16px; max-width:52ch; }
+  .skill-group{ margin-bottom:20px; }
+  .skill-group .label{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--teal); margin-bottom:8px; }
+  .skill-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-dim);
+    border:1px solid var(--line); padding:4px 9px; border-radius:3px;
+  }
+
+  /* PROJECTS — log-row style, not cards */
+  .project-row{
+    border-bottom:1px solid var(--line);
+    padding:26px 0;
+    display:grid; grid-template-columns:200px 1fr; gap:24px;
+  }
+  .project-row:first-child{ padding-top:0; }
+  .project-row:last-child{ border-bottom:none; }
+  .project-meta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-dim); }
+  .project-meta .status{ color:var(--teal); }
+  .project-title{ font-size:18px; font-weight:600; margin-bottom:8px; }
+  .project-desc{ color:var(--text-dim); font-size:14.5px; max-width:64ch; margin-bottom:14px; }
+  .project-stack{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .project-links{ display:flex; gap:18px; font-size:13px; }
+  .project-links a{ color:var(--amber); }
+  .project-links a:hover{ text-decoration:underline; }
+
+  /* EXPERIENCE — timeline, legitimate sequence */
+  .timeline{ position:relative; padding-left:28px; }
+  .timeline::before{
+    content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--line);
+  }
+  .tl-item{ position:relative; padding-bottom:34px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{
+    content:''; position:absolute; left:-28px; top:5px; width:9px; height:9px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--amber);
+  }
+  .tl-role{ font-weight:600; font-size:16px; }
+  .tl-org{ color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:13px; margin-top:2px; }
+  .tl-date{ color:var(--text-dim); font-size:13px; margin-top:2px; margin-bottom:8px; }
+  .tl-desc{ color:var(--text-dim); font-size:14px; max-width:60ch; }
+
+  /* CONTACT */
+  .contact-panel{
+    border:1px solid var(--line); border-radius:6px; padding:36px;
+    background:var(--panel);
+  }
+  .contact-panel .prompt{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--teal); margin-bottom:6px; }
+  .contact-panel h2{ font-size:26px; margin-bottom:14px; }
+  .contact-panel p{ color:var(--text-dim); max-width:50ch; margin-bottom:26px; }
+  .contact-list{ display:flex; gap:28px; flex-wrap:wrap; }
+  .contact-list a{ font-family:'IBM Plex Mono', monospace; font-size:14px; border-bottom:1px solid var(--line); padding-bottom:2px; }
+  .contact-list a:hover{ border-color:var(--amber); color:var(--amber); }
+
+  footer{ padding:28px 0 40px; text-align:center; color:var(--text-dim); font-size:13px; }
+
+  @media (max-width:760px){
+    .hero{ grid-template-columns:1fr; padding-top:48px; }
+    .hero h1{ font-size:32px; }
+    .pipeline{ height:200px; order:-1; }
+    .about-grid{ grid-template-columns:1fr; }
+    .project-row{ grid-template-columns:1fr; gap:10px; }
+    .nav-links{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dot{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">your<span>_</span>name</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a class="nav-resume" href="#">resume.pdf</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <section class="hero" style="border-top:none;">
+    <div>
+      <div class="kicker">// data engineer</div>
+      <h1>I build pipelines that move data without losing anyone's trust in it.</h1>
+      <p class="lead">Placeholder bio — swap in your own: years of experience, the kind of systems you build (batch, streaming, warehouses), and what you care about (reliability, cost, correctness).</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#projects">View projects</a>
+        <a class="btn btn-ghost" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <div class="pipeline">
+      <svg viewBox="0 0 380 280" preserveAspectRatio="xMidYMid meet">
+        <!-- nodes -->
+        <rect class="node-box" x="10" y="30" width="90" height="40" rx="4"/>
+        <text class="node-label" x="55" y="54" text-anchor="middle">source.db</text>
+
+        <rect class="node-box" x="10" y="120" width="90" height="40" rx="4"/>
+        <text class="node-label" x="55" y="144" text-anchor="middle">events</text>
+
+        <rect class="node-box" x="10" y="210" width="90" height="40" rx="4"/>
+        <text class="node-label" x="55" y="234" text-anchor="middle">files.csv</text>
+
+        <rect class="node-box" x="150" y="105" width="90" height="55" rx="4"/>
+        <text class="node-label" x="195" y="128" text-anchor="middle">transform</text>
+        <text class="node-label" x="195" y="144" text-anchor="middle" fill="#8B949E">dbt</text>
+
+        <rect class="node-box" x="280" y="105" width="90" height="55" rx="4"/>
+        <text class="node-label" x="325" y="128" text-anchor="middle">warehouse</text>
+        <text class="node-label" x="325" y="144" text-anchor="middle" fill="#8B949E">.parquet</text>
+
+        <!-- flow lines -->
+        <path class="flow-line" id="p1" d="M100,50 C130,50 130,132 150,132"/>
+        <path class="flow-line" id="p2" d="M100,140 C125,140 125,132 150,132"/>
+        <path class="flow-line" id="p3" d="M100,230 C130,230 130,132 150,132"/>
+        <path class="flow-line" d="M240,132 L280,132"/>
+
+        <circle class="dot" r="3">
+          <animateMotion dur="3.2s" repeatCount="indefinite" begin="0s">
+            <mpath href="#p1"/>
+          </animateMotion>
+        </circle>
+        <circle class="dot" r="3">
+          <animateMotion dur="2.6s" repeatCount="indefinite" begin="0.6s">
+            <mpath href="#p2"/>
+          </animateMotion>
+        </circle>
+        <circle class="dot" r="3">
+          <animateMotion dur="3.6s" repeatCount="indefinite" begin="1.1s">
+            <mpath href="#p3"/>
+          </animateMotion>
+        </circle>
+      </svg>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-head"><span class="num mono">01</span><h2>About</h2></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Placeholder paragraph. Talk about how you got into data engineering, the scale of data you've worked with, and the kinds of problems you enjoy solving — schema design, backfills, cost optimization, data quality, whatever's true.</p>
+        <p>Second paragraph, optional: current focus or what you're learning right now.</p>
+      </div>
+      <div class="skills">
+        <div class="skill-group">
+          <div class="label">languages</div>
+          <div class="skill-tags">
+            <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Scala</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="label">orchestration</div>
+          <div class="skill-tags">
+            <span class="tag">Airflow</span><span class="tag">Dagster</span><span class="tag">dbt</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="label">infra & warehousing</div>
+          <div class="skill-tags">
+            <span class="tag">Snowflake</span><span class="tag">BigQuery</span><span class="tag">Spark</span><span class="tag">Kafka</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="label">cloud</div>
+          <div class="skill-tags">
+            <span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Terraform</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head"><span class="num mono">02</span><h2>Projects</h2></div>
+
+    <div class="project-row">
+      <div class="project-meta"><span class="status">● active</span><br>2026</div>
+      <div>
+        <div class="project-title">Real-time clickstream pipeline</div>
+        <div class="project-desc">Placeholder — describe the problem, your approach, and the outcome in one or two sentences. E.g. "Ingested ~2M events/day from Kafka into a streaming pipeline, cut end-to-end latency from 15min to 45s."</div>
+        <div class="project-stack">
+          <span class="tag">Kafka</span><span class="tag">Flink</span><span class="tag">Snowflake</span>
+        </div>
+        <div class="project-links">
+          <a href="#">Repo</a><a href="#">Write-up</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row">
+      <div class="project-meta"><span class="status">● complete</span><br>2025</div>
+      <div>
+        <div class="project-title">Warehouse migration &amp; modeling overhaul</div>
+        <div class="project-desc">Placeholder — e.g. "Migrated legacy warehouse to dbt-managed models, reduced query costs 30% and cut onboarding time for new analysts."</div>
+        <div class="project-stack">
+          <span class="tag">dbt</span><span class="tag">BigQuery</span><span class="tag">Airflow</span>
+        </div>
+        <div class="project-links">
+          <a href="#">Repo</a><a href="#">Write-up</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row">
+      <div class="project-meta"><span class="status">● complete</span><br>2024</div>
+      <div>
+        <div class="project-title">Data quality monitoring framework</div>
+        <div class="project-desc">Placeholder — e.g. "Built an internal tool for automated schema and freshness checks across 40+ pipelines, catching breakages before dashboards did."</div>
+        <div class="project-stack">
+          <span class="tag">Python</span><span class="tag">Great Expectations</span><span class="tag">Postgres</span>
+        </div>
+        <div class="project-links">
+          <a href="#">Repo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="section-head"><span class="num mono">03</span><h2>Experience</h2></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-role">Data Engineer</div>
+        <div class="tl-org">company_name</div>
+        <div class="tl-date">2023 — present</div>
+        <div class="tl-desc">Placeholder — one or two lines on scope and impact.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">Data Engineer / Analyst</div>
+        <div class="tl-org">previous_company</div>
+        <div class="tl-date">2021 — 2023</div>
+        <div class="tl-desc">Placeholder — one or two lines on scope and impact.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">B.S., Computer Science</div>
+        <div class="tl-org">your_university</div>
+        <div class="tl-date">2017 — 2021</div>
+        <div class="tl-desc"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" style="padding-bottom:20px;">
+    <div class="contact-panel">
+      <div class="prompt">$ get_in_touch</div>
+      <h2>Let's talk data.</h2>
+      <p>Open to new roles, freelance pipeline work, or just nerding out about data infrastructure. Reach out through any of these.</p>
+      <div class="contact-list">
+        <a href="mailto:you@example.com">you@example.com</a>
+        <a href="#">github.com/yourname</a>
+        <a href="#">linkedin.com/in/yourname</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>© 2026 Your Name. Built with care.</footer>
+
+</body>
+</html>
